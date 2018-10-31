@@ -9,6 +9,6 @@ namespace ResourceCopier.ResourceProccess
 
         void WriteKeyValuePairs(string path, List<DictionaryEntry> exitedEntries);
 
-        DictionaryEntry? GetKvp(IEnumerable<string> paths, string key);
+        DictionaryEntry GetKvp(IEnumerable<string> paths, string key);
     }
 }

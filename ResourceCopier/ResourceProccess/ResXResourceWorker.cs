@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ResourceCopier.ResourceProccess
 {
-    public class ResXResourceWorker:ResourceWorker
+    public class ResXResourceWorker : ResourceWorker
     {
         public List<DictionaryEntry> ReadKeyValuePairs(string path)
         {
@@ -33,13 +33,17 @@ namespace ResourceCopier.ResourceProccess
             }
         }
 
-        public DictionaryEntry? GetKvp(IEnumerable<string> paths, string key)
+        public DictionaryEntry GetKvp(IEnumerable<string> paths, string key)
         {
-            DictionaryEntry? foundKey = null;
+            DictionaryEntry foundKey;
             foreach (var path in paths)
             {
                 var kvps = ReadKeyValuePairs(path);
-                 foundKey = kvps.FirstOrDefault(x => x.Key.ToString() == key);              
+                var kvp = kvps.FirstOrDefault(x => x.Key.ToString() == key);
+                if (kvp.Key !=null && kvp.Value!=null)
+                {
+                    foundKey = new DictionaryEntry(kvp.Key, kvp.Value);
+                }
             }
 
             return foundKey;

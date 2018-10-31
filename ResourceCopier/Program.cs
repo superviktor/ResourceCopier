@@ -13,7 +13,7 @@ namespace ResourceCopier
         static void Main(string[] args)
         {
             var engLocalizationParams = new ConcreteLocalizationParamsCreator().Create(Language.Eng);
-            var anotherLanguageLocalizationParams = new ConcreteLocalizationParamsCreator().Create(Language.Que);
+            var anotherLanguageLocalizationParams = new ConcreteLocalizationParamsCreator().Create(Language.Ger);
             var resourceLocator = new ResXResourceLocator();
             var resourceWorker = new ResXResourceWorker();
             var engResXFiles = resourceLocator.GetAll(_fuelWebUIPath, engLocalizationParams);
@@ -37,17 +37,26 @@ namespace ResourceCopier
                     {
                         var diffs = engResXFileKvps.Select(x => x.Key.ToString())
                             .Except(anotherLangResXFileKvps.Select(y => y.Key.ToString()));
-
+                        int count = 0;
                         foreach (var diff in diffs)
                         {
                             var foundKvp = resourceWorker.GetKvp(anotherLangResXFiles, diff);
-                            if (foundKvp != null)
+                            if (foundKvp.Key!=null && foundKvp.Value!=null)
                             {
-                                anotherLangResXFileKvps.Add(foundKvp.Value);
+                                count++;
+                                anotherLangResXFileKvps.Add(foundKvp);
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Key {diff} exist in file {engResXFile} but does not exist in file {anotherLangResXFile}. Also we couldn't found such key in another files");
                             }
                         }
 
-                        resourceWorker.WriteKeyValuePairs(anotherLangResXFile, anotherLangResXFileKvps);
+                        if (count>0)
+                        {
+                            resourceWorker.WriteKeyValuePairs(anotherLangResXFile, anotherLangResXFileKvps);
+
+                        }
                     }
                 }
                 else
