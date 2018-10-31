@@ -7,7 +7,7 @@ using ResourceCopier.LocalizationParamsObjects;
 
 namespace ResourceCopier.ResourceLocation
 {
-    interface IResourceLocator
+    public interface IResourceLocator
     {
         List<string> GetAll(string folderPath, LocalizationParams localizationParams);
     }
