@@ -1,0 +1,7 @@
+C:\Users\User\AppData\Local\Temporary Projects\ResourceCopier\bin\Debug\ResourceCopier.exe.config
+C:\Users\User\AppData\Local\Temporary Projects\ResourceCopier\bin\Debug\ResourceCopier.exe
+C:\Users\User\AppData\Local\Temporary Projects\ResourceCopier\bin\Debug\ResourceCopier.pdb
+C:\Users\User\AppData\Local\Temporary Projects\ResourceCopier\obj\Debug\ResourceCopier.csprojAssemblyReference.cache
+C:\Users\User\AppData\Local\Temporary Projects\ResourceCopier\obj\Debug\ResourceCopier.csproj.CoreCompileInputs.cache
+C:\Users\User\AppData\Local\Temporary Projects\ResourceCopier\obj\Debug\ResourceCopier.exe
+C:\Users\User\AppData\Local\Temporary Projects\ResourceCopier\obj\Debug\ResourceCopier.pdb
