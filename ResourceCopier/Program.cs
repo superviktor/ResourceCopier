@@ -17,6 +17,9 @@ namespace ResourceCopier
             foreach (var lang in Enum.GetValues(typeof(Language)).Cast<Language>())
             {
                 worker.FindDiffAndCopuFromAnotherResources(lang);
+                Console.WriteLine("\n");
+                Console.WriteLine("************************");
+                Console.WriteLine("\n");
             }    
         }
 

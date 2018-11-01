@@ -140,7 +140,19 @@ namespace ResourceCopier.ResourceProccess
                             }
                             else
                             {
-                                Console.WriteLine($"Key {diffKvp.Value} exist in file {engResXFile} but does not exist in file {anotherLangResXFile}. Also we couldn't found such key in another files");
+                                switch (lang)
+                                {
+                                    case Language.Ger:
+                                        File.AppendAllText(@"E:\de_notTranslated.txt", $"File: {anotherLangResXFile}, Key: {diffKvp.Key} - Value:\t {diffKvp.Value}" + Environment.NewLine);
+                                        break;
+                                    case Language.Fra:
+                                        File.AppendAllText(@"E:\fr-FR_notTranslated.txt", $"File: {anotherLangResXFile}: Key: {diffKvp.Key} - Value \t {diffKvp.Value}" + Environment.NewLine);
+                                        break;
+                                    case Language.Que:
+                                        File.AppendAllText(@"E:\fr-CA_notTranslated.txt", $"File:{anotherLangResXFile}: Key: {diffKvp.Key} - Value \t {diffKvp.Value}" + Environment.NewLine);
+                                        break;
+                                } 
+                                Console.WriteLine($"Key {diffKvp.Key} exist in file {engResXFile} but does not exist in file {engResXFile}. Also we couldn't found such value in another files");
                             }
                         }
 
