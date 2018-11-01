@@ -9,7 +9,9 @@ namespace ResourceCopier.ResourceProccess
 
         void WriteKeyValuePairs(string path, List<DictionaryEntry> exitedEntries);
 
-        DictionaryEntry GetKvp(IEnumerable<string> paths, string key);
+        KvpModel GetKvpByKey(IEnumerable<string> paths, string key);
+
+        KvpModel GetKvpByValue(IEnumerable<string> paths, string value);
 
         void FindDiffAndCopuFromAnotherResources(Language lang);
     }

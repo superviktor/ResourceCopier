@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using ResourceCopier.LocalizationParamsCreating;
-using ResourceCopier.LocalizationParamsObjects;
 using ResourceCopier.ResourceLocation;
 using ResourceCopier.ResourceProccess;
 
@@ -16,7 +14,10 @@ namespace ResourceCopier
             var resourceLocator = new ResXResourceLocator();
             var localizationParamsCreator = new ConcreteLocalizationParamsCreator();
             var worker = new ResXResourceWorker(resourceLocator, _fuelWebUIPath, localizationParamsCreator);
-            worker.FindDiffAndCopuFromAnotherResources(Language.Ger);        
+            foreach (var lang in Enum.GetValues(typeof(Language)).Cast<Language>())
+            {
+                worker.FindDiffAndCopuFromAnotherResources(lang);
+            }    
         }
 
     }

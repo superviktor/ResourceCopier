@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="KvpModel.cs" />
     <Compile Include="LocalizationParamsCreating\ConcreteLocalizationParamsCreator.cs" />
     <Compile Include="LocalizationParamsObjects\EngLocalizationParams.cs" />
     <Compile Include="LocalizationParamsObjects\FraLocalizationParams.cs" />

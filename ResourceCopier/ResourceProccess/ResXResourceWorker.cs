@@ -48,34 +48,58 @@ namespace ResourceCopier.ResourceProccess
             }
         }
 
-        public DictionaryEntry GetKvp(IEnumerable<string> paths, string key)
+        public KvpModel GetKvpByKey(IEnumerable<string> paths, string key)
         {
-            DictionaryEntry foundKey;
+            KvpModel kvpModel = null;
             foreach (var path in paths)
             {
                 var kvps = ReadKeyValuePairs(path);
                 var kvp = kvps.FirstOrDefault(x => x.Key.ToString() == key);
-                if (kvp.Key !=null && kvp.Value!=null)
+                if (kvp.Key != null && kvp.Value != null)
                 {
-                    foundKey = new DictionaryEntry(kvp.Key, kvp.Value);
+                    kvpModel = new KvpModel()
+                    {
+                        DictionaryEntry = kvp,
+                        FileName = path
+                    };
+                    break;
                 }
             }
 
-            return foundKey;
+            return kvpModel;
+        }
+
+        public KvpModel GetKvpByValue(IEnumerable<string> paths, string value)
+        {
+            KvpModel kvpModel = null;
+            foreach (var path in paths)
+            {
+                var kvps = ReadKeyValuePairs(path);
+                var kvp = kvps.FirstOrDefault(x => x.Value.ToString() == value);
+                if (kvp.Key != null && kvp.Value != null)
+                {
+                    kvpModel = new KvpModel()
+                    {
+                        DictionaryEntry = kvp,
+                        FileName = path
+                    };
+                    break;
+                }
+            }
+
+            return kvpModel;
         }
 
         public void FindDiffAndCopuFromAnotherResources(Language lang)
         {
             var engLocalizationParams = _localizationParamsCreator.Create(Language.Eng);
-            var anotherLangLocalizationParams = _localizationParamsCreator.Create(Language.Ger);
+            var anotherLangLocalizationParams = _localizationParamsCreator.Create(lang);
             var engResXFiles = _resourceLocator.GetAll(_fuelWebUIPath, engLocalizationParams);
             var anotherLangResXFiles = _resourceLocator.GetAll(_fuelWebUIPath, anotherLangLocalizationParams);
 
             foreach (var engResXFile in engResXFiles)
             {
-                var index = engResXFile.IndexOf(".resx");
-                var anotherLangResXFile =
-                    engResXFile.Substring(0, index) + anotherLangLocalizationParams.FileExtension;
+                var anotherLangResXFile = GetAnotherLangFileName(engResXFile, anotherLangLocalizationParams);
 
                 if (File.Exists(anotherLangResXFile))
                 {
@@ -89,18 +113,34 @@ namespace ResourceCopier.ResourceProccess
                     {
                         var diffs = engResXFileKvps.Select(x => x.Key.ToString())
                             .Except(anotherLangResXFileKvps.Select(y => y.Key.ToString()));
-                        int count = 0;
-                        foreach (var diff in diffs)
+
+                        var diffKvps = diffs.Select(diff => new DictionaryEntry()
                         {
-                            var foundKvp = GetKvp(anotherLangResXFiles, diff);
-                            if (foundKvp.Key != null && foundKvp.Value != null)
+                            Key = diff,
+                            Value = engResXFileKvps.FirstOrDefault(x => x.Key.ToString() == diff).Value
+                        }).ToList();
+
+                        int count = 0;
+                        foreach (var diffKvp in diffKvps)
+                        {
+                            var foundKvp = GetKvpByValue(engResXFiles.Except(new List<string>{engResXFile}), diffKvp.Value.ToString());
+                            if (foundKvp?.DictionaryEntry.Key != null && foundKvp?.DictionaryEntry.Value != null)
                             {
                                 count++;
-                                anotherLangResXFileKvps.Add(foundKvp);
+                                var foundKvpDictionaryEntry = foundKvp.DictionaryEntry;
+                                foundKvpDictionaryEntry.Key = diffKvp.Key;
+                                var anotherLangConcreteResXFile = GetAnotherLangFileName(foundKvp.FileName, anotherLangLocalizationParams);
+                                var entryByKey = GetKvpByKey(new List<string>() { anotherLangConcreteResXFile },
+                                    foundKvp.DictionaryEntry.Key.ToString());
+                                if (entryByKey?.DictionaryEntry.Key!=null && entryByKey?.DictionaryEntry.Value != null)
+                                {
+                                    foundKvpDictionaryEntry.Value = entryByKey.DictionaryEntry.Value;
+                                }
+                                anotherLangResXFileKvps.Add(foundKvpDictionaryEntry);
                             }
                             else
                             {
-                                Console.WriteLine($"Key {diff} exist in file {engResXFile} but does not exist in file {anotherLangResXFile}. Also we couldn't found such key in another files");
+                                Console.WriteLine($"Key {diffKvp.Value} exist in file {engResXFile} but does not exist in file {anotherLangResXFile}. Also we couldn't found such key in another files");
                             }
                         }
 
@@ -116,6 +156,14 @@ namespace ResourceCopier.ResourceProccess
                 }
 
             }
+        }
+
+        public string GetAnotherLangFileName(string engFileName, LocalizationParams localizationParams)
+        {
+            var index = engFileName.IndexOf(".resx");
+            var anotherLangResXFile =
+                engFileName.Substring(0, index) + localizationParams.FileExtension;
+            return anotherLangResXFile;
         }
     }
 }
