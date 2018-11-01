@@ -15,13 +15,13 @@ namespace ResourceCopier.ResourceProccess
     public class ResXResourceWorker : ResourceWorker
     {
         private IResourceLocator _resourceLocator;
-        private string _fuelWebUIPath;
+        private string _path;
         private LocalizationParamsCreator _localizationParamsCreator;
 
-        public ResXResourceWorker(IResourceLocator resourceLocator, string fuelWebUIPath, LocalizationParamsCreator localizationParamsCreator)
+        public ResXResourceWorker(IResourceLocator resourceLocator, string path, LocalizationParamsCreator localizationParamsCreator)
         {
             _resourceLocator = resourceLocator;
-            _fuelWebUIPath = fuelWebUIPath;
+            _path = path;
             _localizationParamsCreator = localizationParamsCreator;
         }
 
@@ -94,8 +94,8 @@ namespace ResourceCopier.ResourceProccess
         {
             var engLocalizationParams = _localizationParamsCreator.Create(Language.Eng);
             var anotherLangLocalizationParams = _localizationParamsCreator.Create(lang);
-            var engResXFiles = _resourceLocator.GetAll(_fuelWebUIPath, engLocalizationParams);
-            var anotherLangResXFiles = _resourceLocator.GetAll(_fuelWebUIPath, anotherLangLocalizationParams);
+            var engResXFiles = _resourceLocator.GetAll(_path, engLocalizationParams);
+            var anotherLangResXFiles = _resourceLocator.GetAll(_path, anotherLangLocalizationParams);
 
             foreach (var engResXFile in engResXFiles)
             {

@@ -8,12 +8,12 @@ namespace ResourceCopier
 {
     class Program
     {
-        private static readonly string _fuelWebUIPath = @"E:\onyx\Source\FUEL.Web.UI";
+        private static readonly string _path = @"";
         static void Main(string[] args)
         {           
             var resourceLocator = new ResXResourceLocator();
             var localizationParamsCreator = new ConcreteLocalizationParamsCreator();
-            var worker = new ResXResourceWorker(resourceLocator, _fuelWebUIPath, localizationParamsCreator);
+            var worker = new ResXResourceWorker(resourceLocator, _path, localizationParamsCreator);
             foreach (var lang in Enum.GetValues(typeof(Language)).Cast<Language>())
             {
                 worker.FindDiffAndCopuFromAnotherResources(lang);
